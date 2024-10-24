@@ -23,7 +23,7 @@
 3. [ ] 답변 없는 경우 삭제 가능
 7. [ ] 질문자 답변자가 다른경우 답변 삭제 불가능
 5. [ ] 질문 삭제 시 답변도 삭제 필요
-6. [ ] 답변 삭제 시 삭제 상태(boolean) 변경 -> answer를 deleted -> true
+6. [x] 답변 삭제 시 삭제 상태(boolean) 변경 -> answer를 deleted -> true
 8. [ ] 질문삭제, 답변삭제는 DeleteHistory 저장
 
 #### 리팩터링 요구사항

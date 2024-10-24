@@ -16,14 +16,14 @@ public class AnswerTest {
     public static final Answer A2 = new Answer(NsUserTest.SANJIGI, QuestionTest.Q1, "Answers Contents2");
 
     @Test
-    @DisplayName("로그인 사용자와 질문자가 같은 경우 답변 삭제 가능한지 확인")
+    @DisplayName("로그인 사용자와 답변자가 같은 경우 답변 삭제 가능한지 확인")
     void loginUserEqualsAnswerUser() throws CannotDeleteException {
         A1.delete(NsUserTest.JAVAJIGI);
         assertThat(A1.isDeleted()).isTrue();
     }
 
     @Test
-    @DisplayName("로그인 사용자와 질문자가 다른 경우 에러 발생하는지 확인")
+    @DisplayName("로그인 사용자와 답변자가 다른 경우 에러 발생하는지 확인")
     void loginUserDifferentAnswerUser() {
         assertThatThrownBy(() -> {
             A1.delete(NsUserTest.SANJIGI);
@@ -35,7 +35,7 @@ public class AnswerTest {
     void createDeleteAnswerHistory() throws CannotDeleteException {
         A1.delete(NsUserTest.JAVAJIGI);
 
-        List<DeleteHistory> deleteHistories = A1.createDeleteAnswerHistory();
+        List<DeleteHistory> deleteHistories = A1.createDeleteHistory();
         DeleteHistory expectedHistory = new DeleteHistory(ContentType.ANSWER, A1.getId(), A1.getWriter(), LocalDateTime.now());
 
         assertThat(deleteHistories).hasSize(1);

@@ -54,7 +54,7 @@ public class Answer {
         return deleted;
     }
 
-    public boolean markDeleted() {
+    public boolean markAsDeleted() {
         return this.deleted = true;
     }
 
@@ -81,13 +81,13 @@ public class Answer {
 
     public void delete(NsUser loginUser) throws CannotDeleteException {
         if (!isOwner(loginUser)) {
-            throw new CannotDeleteException("질문을 삭제할 권한이 없습니다.");
+            throw new CannotDeleteException("답변을 삭제할 권한이 없습니다.");
         }
-        markDeleted();
-        createDeleteAnswerHistory();
+        markAsDeleted();
+        createDeleteHistory();
     }
 
-    public List<DeleteHistory> createDeleteAnswerHistory() {
+    public List<DeleteHistory> createDeleteHistory() {
         List<DeleteHistory> deleteHistories = new ArrayList<>();
         deleteHistories.add(new DeleteHistory(ContentType.ANSWER, this.getId(), this.getWriter(), LocalDateTime.now()));
         return deleteHistories;

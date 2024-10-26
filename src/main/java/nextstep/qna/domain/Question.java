@@ -1,5 +1,6 @@
 package nextstep.qna.domain;
 
+import nextstep.qna.exception.CannotDeleteException;
 import nextstep.users.domain.NsUser;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public class Question {
 
     private NsUser writer;
 
-    private List<Answer> answers = new ArrayList<>();
+    private Answers answers = new Answers();
 
     private boolean deleted = false;
 
@@ -37,56 +38,64 @@ public class Question {
         this.contents = contents;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Question setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public Question setContents(String contents) {
-        this.contents = contents;
-        return this;
-    }
-
-    public NsUser getWriter() {
-        return writer;
-    }
-
     public void addAnswer(Answer answer) {
         answer.toQuestion(this);
         answers.add(answer);
     }
 
-    public boolean isOwner(NsUser loginUser) {
-        return writer.equals(loginUser);
-    }
-
-    public Question setDeleted(boolean deleted) {
-        this.deleted = deleted;
-        return this;
+    public boolean markDeleted() {
+        return this.deleted = true;
     }
 
     public boolean isDeleted() {
         return deleted;
     }
 
-    public List<Answer> getAnswers() {
-        return answers;
+    public boolean isOwner(NsUser loginUser) {
+        return writer.equals(loginUser);
     }
 
-    @Override
-    public String toString() {
-        return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
+    public boolean hasNoAnswers() {
+        return answers.isEmpty();
+    }
+
+    public List<DeleteHistory> delete(NsUser loginUser) throws CannotDeleteException {
+
+        if (!isOwner(loginUser)) {
+            throw new CannotDeleteException("질문을 삭제할 권한이 없습니다.");
+        }
+
+        if (!hasNoAnswers()) {
+            checkAllAnswersOwnedBy(loginUser);
+        }
+        markDeleted();
+
+        List<DeleteHistory> deleteHistories = new ArrayList<>();
+        deleteHistories.add(createDeleteHistory());
+        deleteHistories.addAll(answers.deleteAllOwnedBy(loginUser));
+
+        return deleteHistories;
+    }
+
+    public DeleteHistory createDeleteHistory() {
+        return new DeleteHistory(ContentType.QUESTION, this.id, this.writer, LocalDateTime.now());
+    }
+
+    public void checkAllAnswersOwnedBy(NsUser loginUser) throws CannotDeleteException {
+        if (!answers.isAllOwnedBy(loginUser)) {
+            throw new CannotDeleteException("다른 사람이 쓴 답변이 있어 삭제할 수 없습니다.");
+        }
+    }
+
+    public long getId() {
+        return this.id = id;
+    }
+
+    public NsUser getWriter() {
+        return this.writer = writer;
+    }
+
+    public Object getAnswers() {
+        return this.answers = answers;
     }
 }

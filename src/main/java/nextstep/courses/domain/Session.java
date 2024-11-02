@@ -25,7 +25,7 @@ public class Session {
 
     public Session(String title, LocalDate startDate, LocalDate endDate, Image sessionImage, boolean isFree,
                    int maxEnrollment, int enrollCount, int sessionFee, SessionStatus status) {
-        validationDate(startDate, endDate);
+        validateDate(startDate, endDate);
 
         this.title = title;
         this.startDate = startDate;
@@ -38,7 +38,7 @@ public class Session {
         this.status = status;
     }
 
-    private void validationDate(LocalDate startDate, LocalDate endDate) {
+    private void validateDate(LocalDate startDate, LocalDate endDate) {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("시작일은 종료일 이전이어야 합니다.");
         }

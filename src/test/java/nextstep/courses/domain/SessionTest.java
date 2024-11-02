@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SessionTest {
 
@@ -44,10 +45,31 @@ class SessionTest {
     }
 
     @Test
+    @DisplayName("유료 강의 신청 시 결제 금액이 수강료와 다를 경우 예외 발생")
+    void enrollIncorrectPaymentThrowException() {
+        assertThatThrownBy(() -> paidSession.enroll(90000))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("유료 강의 신청 시 결제 금액이 수강료와 일치하면 수강 신청 성공")
     void enrollCorrectPaymentThrowException() {
         paidSession.enroll(100000);
         assertThat(paidSession.getEnrolledCount()).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("유료 강의는 최대 수강 인원 초과 시 예외 발생")
+    void overMaxEnrollmentThrowsException() {
+        IntStream.range(0, 10).forEach(i -> paidSession.enroll(100000));
+        assertThatThrownBy(() -> paidSession.enroll(100000))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    @DisplayName("모집 중이 아닌 강의 수강 신청 시 예외 발생")
+    void enrollReadySessionThrowsException() {
+        Session readySession = new Session("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0);
+        assertThatThrownBy(() -> readySession.enroll()).isInstanceOf(IllegalStateException.class);
+    }
 }

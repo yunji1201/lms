@@ -57,6 +57,15 @@ public class Session {
     }
 
     public void enroll(int payment) {
+        if (status != SessionStatus.OPEN) {
+            throw new IllegalStateException("수강 신청은 모집중인 상태에서만 가능하빈다.");
+        }
+        if (!isFree && enrollCount >= maxEnrollment) {
+            throw new IllegalStateException("수강 인원이 초과되었습니다.");
+        }
+        if (!isFree && payment != sessionFee) {
+            throw new IllegalArgumentException("결제 금액이 수강료와 일치하지 않습니다.");
+        }
         enrollCount++;
     }
 

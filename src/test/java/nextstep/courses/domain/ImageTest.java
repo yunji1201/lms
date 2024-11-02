@@ -18,7 +18,7 @@ class ImageTest {
     }
 
     @Test
-    @DisplayName("이미지 크기 1MB 초과하면 에러 발생")
+    @DisplayName("이미지 크기 1MB 초과하면 예외 발생")
     void createOverSizeImageThrowException() {
         assertThatThrownBy(() -> new Image("강의_이미지", 2, "jpg", 300, 200))
                 .isInstanceOf(IllegalArgumentException.class);

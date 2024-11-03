@@ -4,34 +4,25 @@ import nextstep.courses.constants.SessionStatus;
 
 import java.time.LocalDate;
 
-public class Session {
+public abstract class Session {
+    protected String title;
+    protected LocalDate startDate;
+    protected LocalDate endDate;
+    protected Image sessionImage;
+    protected int enrollCount;
+    protected SessionStatus status;
 
-    private String title;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Image sessionImage;
-    private boolean isFree;
-    private int maxEnrollment;
-    private int enrollCount;
-    private int sessionFee;
-    private SessionStatus status;
-
-    public Session(String title, LocalDate startDate, LocalDate endDate, Image sessionImage, boolean isFree,
-                   int maxEnrollment, int enrollCount, int sessionFee, SessionStatus status) {
+    public Session(String title, LocalDate startDate, LocalDate endDate, Image sessionImage, SessionStatus status) {
         validateDate(startDate, endDate);
-
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.sessionImage = sessionImage;
-        this.isFree = isFree;
-        this.maxEnrollment = maxEnrollment;
-        this.enrollCount = enrollCount;
-        this.sessionFee = sessionFee;
         this.status = status;
+        this.enrollCount = 0;
     }
 
-    private void validateDate(LocalDate startDate, LocalDate endDate) {
+    protected void validateDate(LocalDate startDate, LocalDate endDate) {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("시작일은 종료일 이전이어야 합니다.");
         }
@@ -45,13 +36,41 @@ public class Session {
         this.status = SessionStatus.CLOSED;
     }
 
+    public abstract void enroll(int payment);
+
+    public int getEnrolledCount() {
+        return enrollCount;
+    }
+}
+
+class FreeSession extends Session {
+    public FreeSession(String title, LocalDate startDate, LocalDate endDate, Image sessionImage) {
+        super(title, startDate, endDate, sessionImage, SessionStatus.READY);
+    }
+
+    @Override
     public void enroll(int payment) {
         if (status != SessionStatus.OPEN) {
             throw new IllegalStateException("수강 신청은 모집중인 상태에서만 가능합니다.");
         }
-        if (isFree) {
-            enrollCount++;
-            return;
+        enrollCount++;
+    }
+}
+
+class PaidSession extends Session {
+    private int maxEnrollment;
+    private int sessionFee;
+
+    public PaidSession(String title, LocalDate startDate, LocalDate endDate, Image sessionImage, int maxEnrollment, int sessionFee) {
+        super(title, startDate, endDate, sessionImage, SessionStatus.READY);
+        this.maxEnrollment = maxEnrollment;
+        this.sessionFee = sessionFee;
+    }
+
+    @Override
+    public void enroll(int payment) {
+        if (status != SessionStatus.OPEN) {
+            throw new IllegalStateException("수강 신청은 모집중인 상태에서만 가능합니다.");
         }
         if (enrollCount >= maxEnrollment) {
             throw new IllegalStateException("수강 인원이 초과되었습니다.");
@@ -61,9 +80,4 @@ public class Session {
         }
         enrollCount++;
     }
-
-    public int getEnrolledCount() {
-        return enrollCount;
-    }
-
 }

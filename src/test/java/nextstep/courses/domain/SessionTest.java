@@ -14,14 +14,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class SessionTest {
 
     private Image image;
-    private Session freeSession;
-    private Session paidSession;
+    private FreeSession freeSession;
+    private PaidSession paidSession;
 
     @BeforeEach
     void setUp() {
         this.image = new Image("강의이미지", 1, "jpg", 300, 200);
-        this.freeSession = new Session("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0, 0, SessionStatus.READY);
-        this.paidSession = new Session("유료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, false, 10, 0, 100000, SessionStatus.READY);
+        this.freeSession = new FreeSession("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image);
+        this.paidSession = new PaidSession("유료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, 10, 100000);
 
         this.freeSession.startEnrollment();
         this.paidSession.startEnrollment();
@@ -31,11 +31,11 @@ class SessionTest {
     @Test
     @DisplayName("강의 생성 가능한지 확인")
     void createSession() {
-        Session session = new Session("Spring Session", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0, 0, SessionStatus.READY);
+        FreeSession session = new FreeSession("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image);
 
         assertThat(session)
-                .extracting("title", "startDate", "endDate", "sessionImage", "isFree", "maxEnrollment", "status", "sessionFee")
-                .containsExactly("Spring Session", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, SessionStatus.READY, 0);
+                .extracting("title", "startDate", "endDate", "sessionImage")
+                .containsExactly("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image);
     }
 
     @Test
@@ -70,7 +70,7 @@ class SessionTest {
     @Test
     @DisplayName("모집 중이 아닌 강의 수강 신청 시 예외 발생")
     void enrollReadySessionThrowsException() {
-        Session readySession = new Session("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0, 0, SessionStatus.READY);
+        FreeSession readySession = new FreeSession("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image);
         assertThatThrownBy(() -> readySession.enroll(0)).isInstanceOf(IllegalStateException.class);
     }
 }

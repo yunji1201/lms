@@ -16,13 +16,6 @@ public class Session {
     private int sessionFee;
     private SessionStatus status;
 
-    public Session() {
-    }
-
-    public Session(String title, LocalDate startDate, LocalDate endDate, Image sessionImage, boolean isFree, int maxEnrollment, int sessionFee) {
-        this(title, startDate, endDate, sessionImage, isFree, maxEnrollment, 0, sessionFee, SessionStatus.READY);
-    }
-
     public Session(String title, LocalDate startDate, LocalDate endDate, Image sessionImage, boolean isFree,
                    int maxEnrollment, int enrollCount, int sessionFee, SessionStatus status) {
         validateDate(startDate, endDate);
@@ -52,18 +45,18 @@ public class Session {
         this.status = SessionStatus.CLOSED;
     }
 
-    public void enroll() {
-        enroll(0);
-    }
-
     public void enroll(int payment) {
         if (status != SessionStatus.OPEN) {
             throw new IllegalStateException("수강 신청은 모집중인 상태에서만 가능합니다.");
         }
-        if (!isFree && enrollCount >= maxEnrollment) {
+        if (isFree) {
+            enrollCount++;
+            return;
+        }
+        if (enrollCount >= maxEnrollment) {
             throw new IllegalStateException("수강 인원이 초과되었습니다.");
         }
-        if (!isFree && payment != sessionFee) {
+        if (payment != sessionFee) {
             throw new IllegalArgumentException("결제 금액이 수강료와 일치하지 않습니다.");
         }
         enrollCount++;

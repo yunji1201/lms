@@ -20,8 +20,9 @@ class SessionTest {
     @BeforeEach
     void setUp() {
         this.image = new Image("강의이미지", 1, "jpg", 300, 200);
-        this.freeSession = new Session("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0);
-        this.paidSession = new Session("유료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, false, 10, 100000);
+        this.freeSession = new Session("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0, 0, SessionStatus.READY);
+        this.paidSession = new Session("유료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, false, 10, 0, 100000, SessionStatus.READY);
+
         this.freeSession.startEnrollment();
         this.paidSession.startEnrollment();
 
@@ -30,7 +31,7 @@ class SessionTest {
     @Test
     @DisplayName("강의 생성 가능한지 확인")
     void createSession() {
-        Session session = new Session("Spring Session", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0);
+        Session session = new Session("Spring Session", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0, 0, SessionStatus.READY);
 
         assertThat(session)
                 .extracting("title", "startDate", "endDate", "sessionImage", "isFree", "maxEnrollment", "status", "sessionFee")
@@ -40,7 +41,7 @@ class SessionTest {
     @Test
     @DisplayName("무료 강의는 최대 수강 인원 제한 없음 확인")
     void enrollFreeSession() {
-        IntStream.range(0, 1000).forEach(i -> freeSession.enroll());
+        IntStream.range(0, 1000).forEach(i -> freeSession.enroll(0));
         assertThat(freeSession.getEnrolledCount()).isEqualTo(1000);
     }
 
@@ -69,7 +70,7 @@ class SessionTest {
     @Test
     @DisplayName("모집 중이 아닌 강의 수강 신청 시 예외 발생")
     void enrollReadySessionThrowsException() {
-        Session readySession = new Session("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0);
-        assertThatThrownBy(() -> readySession.enroll()).isInstanceOf(IllegalStateException.class);
+        Session readySession = new Session("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, true, 0, 0, 0, SessionStatus.READY);
+        assertThatThrownBy(() -> readySession.enroll(0)).isInstanceOf(IllegalStateException.class);
     }
 }

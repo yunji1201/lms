@@ -5,8 +5,8 @@ import java.util.Set;
 public class Image {
 
     private static final int MAXIMUM_IMAGE_SIZE = 1;
-    private static final int MAXIMUM_WIDTH = 300;
-    private static final int MAXIMUM_HEIGHT = 200;
+    private static final int MINIMUM_WIDTH = 300;
+    private static final int MINIMUM_HEIGHT = 200;
     private static final Set<String> ALLOWED_TYPES = Set.of("gif", "jpg", "jpeg", "png", "svg");
 
     private final String fileName;
@@ -41,8 +41,8 @@ public class Image {
     }
 
     private void validateFileStandard(int width, int height) {
-        if (width < MAXIMUM_WIDTH || height < MAXIMUM_HEIGHT) {
-            throw new IllegalArgumentException("파일은 너비가 300px, 높이가 200px 미만이어야 합니다.");
+        if (width < MINIMUM_WIDTH || height < MINIMUM_HEIGHT) {
+            throw new IllegalArgumentException("파일은 너비가 300px, 높이가 200px 이상이어야 합니다.");
         }
         if (width * 2 != height * 3) {
             throw new IllegalArgumentException("파일 비율은 3:2여야 합니다.");

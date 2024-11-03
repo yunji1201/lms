@@ -58,7 +58,7 @@ public class Session {
 
     public void enroll(int payment) {
         if (status != SessionStatus.OPEN) {
-            throw new IllegalStateException("수강 신청은 모집중인 상태에서만 가능하빈다.");
+            throw new IllegalStateException("수강 신청은 모집중인 상태에서만 가능합니다.");
         }
         if (!isFree && enrollCount >= maxEnrollment) {
             throw new IllegalStateException("수강 인원이 초과되었습니다.");

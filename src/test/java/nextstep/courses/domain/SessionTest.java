@@ -1,6 +1,7 @@
 package nextstep.courses.domain;
 
-import nextstep.courses.constants.SessionStatus;
+import nextstep.courses.domain.session.FreeSession;
+import nextstep.courses.domain.session.PaidSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

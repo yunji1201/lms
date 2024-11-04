@@ -1,0 +1,52 @@
+package nextstep.courses.domain;
+
+import java.util.Set;
+
+public class Image {
+
+    private static final int MAXIMUM_IMAGE_SIZE = 1;
+    private static final int MINIMUM_WIDTH = 300;
+    private static final int MINIMUM_HEIGHT = 200;
+    private static final Set<String> ALLOWED_TYPES = Set.of("gif", "jpg", "jpeg", "png", "svg");
+
+    private final String fileName;
+    private final int fileSize;
+    private final String fileType;
+    private final int width;
+    private final int height;
+
+    public Image(String fileName, int fileSize, String fileType, int width, int height) {
+        validateSize(fileSize);
+        validateFileType(fileType);
+        validateFileStandard(width, height);
+
+        this.fileName = fileName;
+        this.fileSize = fileSize;
+        this.fileType = fileType;
+        this.width = width;
+        this.height = height;
+    }
+
+    private void validateFileType(String fileType) {
+        if (!ALLOWED_TYPES.contains(fileType.toLowerCase())) {
+            throw new IllegalArgumentException("허용되지 않는 파일 형식입니다.");
+        }
+
+    }
+
+    private void validateSize(int fileSize) {
+        if (fileSize > MAXIMUM_IMAGE_SIZE) {
+            throw new IllegalArgumentException("파일 크기는 1MB 이하여야 합니다.");
+        }
+    }
+
+    private void validateFileStandard(int width, int height) {
+        if (width < MINIMUM_WIDTH || height < MINIMUM_HEIGHT) {
+            throw new IllegalArgumentException("파일은 너비가 300px, 높이가 200px 이상이어야 합니다.");
+        }
+        if (width * 2 != height * 3) {
+            throw new IllegalArgumentException("파일 비율은 3:2여야 합니다.");
+        }
+    }
+
+}

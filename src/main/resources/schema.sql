@@ -17,6 +17,7 @@ create table session
     start_time timestamp   not null,
     end_time   timestamp,
     price      int,
+    title      varchar(255),
     primary key (id),
     foreign key (course_id) references course (id)
 );

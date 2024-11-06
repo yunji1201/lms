@@ -6,8 +6,8 @@ import nextstep.courses.domain.Image;
 import java.time.LocalDate;
 
 public class FreeSession extends Session {
-    public FreeSession(String title, LocalDate startDate, LocalDate endDate, Image sessionImage) {
-        super(title, startDate, endDate, sessionImage, SessionStatus.READY);
+    public FreeSession(Long id, Long courseId, String title, LocalDate startDate, LocalDate endDate, Image sessionImage) {
+        super(id, courseId, title, startDate, endDate, sessionImage, SessionStatus.READY);
     }
 
     @Override

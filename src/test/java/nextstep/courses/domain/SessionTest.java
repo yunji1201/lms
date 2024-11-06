@@ -20,7 +20,7 @@ class SessionTest {
 
     @BeforeEach
     void setUp() {
-        this.image = new Image("강의이미지", 1, "jpg", 300, 200);
+        this.image = new Image(1, "강의이미지", 1, "jpg", 300, 200);
         this.freeSession = new FreeSession("무료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image);
         this.paidSession = new PaidSession("유료 강의", LocalDate.now(), LocalDate.now().plusDays(10), image, 10, 100000);
 

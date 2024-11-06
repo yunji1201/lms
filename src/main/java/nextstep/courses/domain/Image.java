@@ -9,17 +9,20 @@ public class Image {
     private static final int MINIMUM_HEIGHT = 200;
     private static final Set<String> ALLOWED_TYPES = Set.of("gif", "jpg", "jpeg", "png", "svg");
 
-    private final String fileName;
-    private final int fileSize;
-    private final String fileType;
-    private final int width;
-    private final int height;
+    private Long id;
+    private int sessionId;
+    private String fileName;
+    private int fileSize;
+    private String fileType;
+    private int width;
+    private int height;
 
-    public Image(String fileName, int fileSize, String fileType, int width, int height) {
+    public Image(int sessionId, String fileName, int fileSize, String fileType, int width, int height) {
         validateSize(fileSize);
         validateFileType(fileType);
         validateFileStandard(width, height);
 
+        this.sessionId = sessionId;
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.fileType = fileType;
@@ -47,6 +50,46 @@ public class Image {
         if (width * 2 != height * 3) {
             throw new IllegalArgumentException("파일 비율은 3:2여야 합니다.");
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public int getSessionId() {
+        return sessionId;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public int getFileSize() {
+        return fileSize;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setSessionId(int sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
 }

@@ -18,10 +18,8 @@ create table session
     end_time   timestamp,
     price      int,
     title      varchar(255),
-    primary key (id),
-    foreign key (course_id) references course (id)
+    primary key (id)
 );
-
 
 create table image
 (
@@ -32,8 +30,7 @@ create table image
     file_type  varchar(50)  not null,
     width      int          not null,
     height     int          not null,
-    primary key (id),
-    foreign key (session_id) references session (id)
+    primary key (id)
 );
 
 create table ns_user

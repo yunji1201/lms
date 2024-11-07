@@ -32,7 +32,7 @@ public class ImageRepositoryTest {
     @Test
     @DisplayName("이미지 생성 / 조회")
     void saveAndFindById() {
-        Image image = new Image(1, "강의_이미지", 1, "jpg", 300, 200);
+        Image image = new Image("강의_이미지", 1, "jpg", 300, 200);
 
         imageRepository.save(image);
         Image savedImage = imageRepository.findById(image.getId());
@@ -44,7 +44,7 @@ public class ImageRepositoryTest {
     @Test
     @DisplayName("이미지 변경")
     void update() {
-        Image image = new Image(1, "강의_이미지", 1, "jpg", 300, 200);
+        Image image = new Image("강의_이미지", 1, "jpg", 300, 200);
         imageRepository.save(image);
 
         image.setFileName("강의_이미지_수정");
@@ -59,7 +59,7 @@ public class ImageRepositoryTest {
     @Test
     @DisplayName("이미지 삭제")
     void deleteById() {
-        Image image = new Image(1, "강의_이미지", 1, "jpg", 300, 200);
+        Image image = new Image("강의_이미지", 1, "jpg", 300, 200);
         imageRepository.save(image);
 
         int count = imageRepository.deleteById(image.getId());

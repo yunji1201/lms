@@ -21,34 +21,30 @@ public class JdbcImageRepository implements ImageRepository {
 
     @Override
     public int save(Image image) {
-        String sql = "INSERT INTO image (session_id, file_name, file_size, file_type, width, height) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO image (file_name, file_size, file_type, width, height) VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
+        int result = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setInt(1, image.getSessionId());
-            ps.setString(2, image.getFileName());
-            ps.setInt(3, image.getFileSize());
-            ps.setString(4, image.getFileType());
-            ps.setInt(5, image.getWidth());
-            ps.setInt(6, image.getHeight());
+            ps.setString(1, image.getFileName());
+            ps.setInt(2, image.getFileSize());
+            ps.setString(3, image.getFileType());
+            ps.setInt(4, image.getWidth());
+            ps.setInt(5, image.getHeight());
             return ps;
         }, keyHolder);
 
         if (keyHolder.getKey() != null) {
             image.setId(keyHolder.getKey().longValue());
         }
-
-        return 1;
+        return result;
     }
-
 
     @Override
     public Image findById(Long id) {
-        String sql = "select id, session_id, file_name, file_size, file_type, width, height from image where id = ?";
+        String sql = "SELECT id, file_name, file_size, file_type, width, height FROM image WHERE id = ?";
         RowMapper<Image> rowMapper = (rs, rowNum) -> {
             Image image = new Image(
-                    rs.getInt("session_id"),
                     rs.getString("file_name"),
                     rs.getInt("file_size"),
                     rs.getString("file_type"),

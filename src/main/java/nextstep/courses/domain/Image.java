@@ -10,19 +10,17 @@ public class Image {
     private static final Set<String> ALLOWED_TYPES = Set.of("gif", "jpg", "jpeg", "png", "svg");
 
     private Long id;
-    private int sessionId;
     private String fileName;
     private int fileSize;
     private String fileType;
     private int width;
     private int height;
 
-    public Image(int sessionId, String fileName, int fileSize, String fileType, int width, int height) {
+    public Image(String fileName, int fileSize, String fileType, int width, int height) {
         validateSize(fileSize);
         validateFileType(fileType);
         validateFileStandard(width, height);
 
-        this.sessionId = sessionId;
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.fileType = fileType;
@@ -34,7 +32,6 @@ public class Image {
         if (!ALLOWED_TYPES.contains(fileType.toLowerCase())) {
             throw new IllegalArgumentException("허용되지 않는 파일 형식입니다.");
         }
-
     }
 
     private void validateSize(int fileSize) {
@@ -54,10 +51,6 @@ public class Image {
 
     public Long getId() {
         return id;
-    }
-
-    public int getSessionId() {
-        return sessionId;
     }
 
     public String getFileName() {
@@ -82,10 +75,6 @@ public class Image {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setSessionId(int sessionId) {
-        this.sessionId = sessionId;
     }
 
     public void setFileName(String fileName) {

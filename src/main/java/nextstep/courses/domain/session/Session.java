@@ -16,9 +16,8 @@ public abstract class Session {
     protected int enrollCount;
     protected SessionStatus status;
 
-    public Session(Long id, Long courseId, String title, LocalDate startDate, LocalDate endDate, Image sessionImage, SessionStatus status) {
+    public Session(Long courseId, String title, LocalDate startDate, LocalDate endDate, Image sessionImage, SessionStatus status) {
         validateDate(startDate, endDate);
-        this.id = id;
         this.courseId = courseId;
         this.title = title;
         this.startDate = startDate;
@@ -28,9 +27,8 @@ public abstract class Session {
         this.enrollCount = 0;
     }
 
-
     public Session(String title, LocalDate startDate, LocalDate endDate, Image sessionImage, SessionStatus status) {
-        this(null, null, title, startDate, endDate, sessionImage, status);
+        this(null, title, startDate, endDate, sessionImage, status);
     }
 
     private void validateDate(LocalDate startDate, LocalDate endDate) {
@@ -83,5 +81,13 @@ public abstract class Session {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Image getSessionImage() {
+        return sessionImage;
+    }
+
+    public void setSessionImage(Image sessionImage) {
+        this.sessionImage = sessionImage;
     }
 }

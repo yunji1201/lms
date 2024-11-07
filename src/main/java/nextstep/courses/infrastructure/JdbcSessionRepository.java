@@ -28,7 +28,7 @@ public class JdbcSessionRepository implements SessionRepository {
         String sql = "INSERT INTO session (course_id, type, duration, start_time, end_time, price, title) VALUES (?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
+        int result = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, session.getCourseId());
             ps.setString(2, session instanceof PaidSession ? "PAID" : "FREE");
@@ -43,7 +43,7 @@ public class JdbcSessionRepository implements SessionRepository {
         if (keyHolder.getKey() != null) {
             session.setId(keyHolder.getKey().longValue());
         }
-        return 1;
+        return result;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class JdbcSessionRepository implements SessionRepository {
                 int maxEnrollment = 30;
                 return new PaidSession(courseId, title, startDate, endDate, null, maxEnrollment, price);
             }
-            return new FreeSession(id, courseId, title, startDate, endDate, null);
+            return new FreeSession(courseId, title, startDate, endDate, null);
         }
     }
 }

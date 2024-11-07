@@ -1,6 +1,12 @@
 package nextstep.courses.infrastructure;
 
+import nextstep.courses.domain.Image;
+import nextstep.courses.domain.SessionRepository;
+import nextstep.courses.domain.session.FreeSession;
+import nextstep.courses.domain.session.PaidSession;
+import nextstep.courses.domain.session.Session;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,15 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import nextstep.courses.domain.SessionRepository;
-import nextstep.courses.domain.session.FreeSession;
-import nextstep.courses.domain.session.PaidSession;
-import nextstep.courses.domain.session.Session;
-import org.junit.jupiter.api.DisplayName;
-
 import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 public class SessionRepositoryTest {
@@ -27,9 +27,11 @@ public class SessionRepositoryTest {
     private JdbcTemplate jdbcTemplate;
 
     private SessionRepository sessionRepository;
+    private Image image;
 
     @BeforeEach
     void setUp() {
+        this.image = new Image("강의이미지", 1, "jpg", 300, 200);
         jdbcTemplate.execute("DELETE FROM session");
         sessionRepository = new JdbcSessionRepository(jdbcTemplate);
     }
@@ -37,7 +39,7 @@ public class SessionRepositoryTest {
     @Test
     @DisplayName("유료 강의 생성 / 조회")
     void saveAndFindPaidSessionById() {
-        Session paidSession = new PaidSession(1L, "유료 강의", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), null, 30, 50000);
+        Session paidSession = new PaidSession(1L, "유료 강의", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), image, 30, 50000);
 
         sessionRepository.save(paidSession);
         Session savedSession = sessionRepository.findById(paidSession.getId());
@@ -50,7 +52,7 @@ public class SessionRepositoryTest {
     @Test
     @DisplayName("무료 강의 생성 / 조회")
     void saveAndFindFreeSessionById() {
-        Session freeSession = new FreeSession(1L, 1L, "무료 강의", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), null);
+        Session freeSession = new FreeSession(1L, "무료 강의", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), image);
 
         sessionRepository.save(freeSession);
         Session savedSession = sessionRepository.findById(freeSession.getId());
@@ -63,7 +65,7 @@ public class SessionRepositoryTest {
     @Test
     @DisplayName("강의 정보 변경")
     void updateSession() {
-        Session paidSession = new PaidSession(1L, "유료 강의", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), null, 30, 50000);
+        Session paidSession = new PaidSession(1L, "유료 강의", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), image, 30, 50000);
         sessionRepository.save(paidSession);
 
         paidSession.setTitle("유료 강의 (수정)");
@@ -79,7 +81,7 @@ public class SessionRepositoryTest {
     @Test
     @DisplayName("강의 삭제")
     void deleteSessionById() {
-        Session freeSession = new FreeSession(1L, 1L, "무료 강의", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), null);
+        Session freeSession = new FreeSession(1L, "무료 강의", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), image);
         sessionRepository.save(freeSession);
 
         int count = sessionRepository.deleteById(freeSession.getId());

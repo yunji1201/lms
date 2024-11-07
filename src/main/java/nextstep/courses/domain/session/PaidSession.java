@@ -12,13 +12,13 @@ public class PaidSession extends Session {
     public abstract class Session {
         protected Long courseId;
 
-        public Session(Long id, Long courseId, String title, LocalDate startDate, LocalDate endDate, Image sessionImage, SessionStatus status) {
+        public Session(Long courseId, String title, LocalDate startDate, LocalDate endDate, Image sessionImage, SessionStatus status) {
             this.courseId = courseId;
         }
     }
 
     public PaidSession(Long courseId, String title, LocalDate startDate, LocalDate endDate, Image sessionImage, int maxEnrollment, int sessionFee) {
-        super(null, courseId, title, startDate, endDate, sessionImage, SessionStatus.READY);
+        super(courseId, title, startDate, endDate, sessionImage, SessionStatus.READY);
         this.maxEnrollment = maxEnrollment;
         this.sessionFee = sessionFee;
     }

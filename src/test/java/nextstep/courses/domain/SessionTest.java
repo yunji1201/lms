@@ -21,8 +21,8 @@ class SessionTest {
 
     @BeforeEach
     void setUp() {
-        this.image = new Image(1, "강의이미지", 1, "jpg", 300, 200);
-        this.freeSession = new FreeSession(1L, 1L, "무료 강의", today, today.plusDays(10), image);
+        this.image = new Image("강의이미지", 1, "jpg", 300, 200);
+        this.freeSession = new FreeSession(1L, "무료 강의", today, today.plusDays(10), image);
         this.paidSession = new PaidSession(1L, "유료 강의", today, today.plusDays(10), image, 10, 100000);
         this.freeSession.startEnrollment();
         this.paidSession.startEnrollment();
@@ -31,7 +31,7 @@ class SessionTest {
     @Test
     @DisplayName("강의 생성 가능한지 확인")
     void createSession() {
-        FreeSession session = new FreeSession(1L, 1L, "무료 강의", today, today.plusDays(10), image);
+        FreeSession session = new FreeSession(1L, "무료 강의", today, today.plusDays(10), image);
 
         assertThat(session)
                 .extracting("title", "startDate", "endDate", "sessionImage")
@@ -70,7 +70,7 @@ class SessionTest {
     @Test
     @DisplayName("모집 중이 아닌 강의 수강 신청 시 예외 발생")
     void enrollReadySessionThrowsException() {
-        FreeSession readySession = new FreeSession(1L, 1L, "무료 강의", today, today.plusDays(10), image);
+        FreeSession readySession = new FreeSession(1L, "무료 강의", today, today.plusDays(10), image);
         assertThatThrownBy(() -> readySession.enroll(0)).isInstanceOf(IllegalStateException.class);
     }
 }
